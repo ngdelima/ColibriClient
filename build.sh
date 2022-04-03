@@ -52,6 +52,7 @@ run()
 	fi
 }
 
+# Start script
 
 case $1 in
 	"")
