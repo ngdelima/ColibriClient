@@ -48,6 +48,7 @@ run()
 {
 	if [ -d "./bin/" ] && [ -f "./bin/colibriClient" ]
 	then
+		sudo stty -F /dev/ttyUSB0 raw
 		./bin/colibriClient
 	fi
 }
