@@ -1,8 +1,7 @@
 #ifndef DRONE_H
 #define DRONE_H
 
-#include"Listener.h"
-#include"CommandDispatcher.h"
+#include"Controller/CommandDispatcher.h"
 
 #define MOTOR_1 0x0
 #define MOTOR_2 0x1
@@ -25,7 +24,7 @@ private:
 	void clampSpeed();
 };
 
-class Drone : public Listener
+class Drone
 {
 public:
 
@@ -36,7 +35,7 @@ public:
 	Motor* getMotor3();
 	Motor* getMotor4();
 
-	void onNotify(INPUT_EVENT _event);
+	void onNotify();
 
 private:
 

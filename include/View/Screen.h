@@ -6,133 +6,36 @@
 //#include"SDL/SDL_image.h"
 #include"SDL2/SDL_ttf.h"
 
-#include"Drone.h"
+//#include"Drone.h"
+
+#include"View/Input/InputMap.h"
+#include"View/Widgets/Widgets.h"
 
 #include<iostream>
-#include<sstream>
 #include<string>
-
-class TextLabel
-{
-public:
-	TextLabel(std::string _text, int _xPos, int _yPos, std::string _fontName, int _fontSize)
-	: mText(_text)
-	, mXPos(_xPos)
-	, mYPos(_yPos)
-	, mFontName(_fontName)
-	, mFontSize(_fontSize)
-	{
-	}
-
-	void render(SDL_Renderer* renderer) 
-	{
-		TTF_Font* font = TTF_OpenFont(mFontName.c_str(), mFontSize);
-
-		if(font == nullptr)
-		{
-			// TODO: Implement error logging
-			return;
-		}
-
-		SDL_Color fg = { 255,0,0,255 };
-		SDL_Surface* surface = TTF_RenderText_Solid(font, mText.c_str(), fg);
-
-		SDL_Texture* optimizedSurface = SDL_CreateTextureFromSurface(renderer, surface);
-
-		SDL_Rect sizeRect;
-		sizeRect.x = 0;
-		sizeRect.y = 0;
-		sizeRect.w = surface->w;
-		sizeRect.h = surface->h;
-
-		SDL_Rect posRect;
-		posRect.x = mXPos;
-		posRect.y = mYPos;
-		posRect.w = sizeRect.w;
-		posRect.h = sizeRect.h;
-
-		SDL_RenderCopy(renderer, optimizedSurface, &sizeRect, &posRect);
-		SDL_DestroyTexture(optimizedSurface);
-		SDL_FreeSurface(surface);
-		TTF_CloseFont(font);
-	}
-
-	void setText(std::string _text) { mText = _text; }
-	std::string getText() { return mText; }
-
-private:
-
-	std::string mText;
-	int mXPos;
-	int mYPos;
-	std::string mFontName;
-	int mFontSize;
-};
-
-class MotorIndicator
-{
-public:
-
-	MotorIndicator(Motor* _motor,std::string _name, int _value, int _xPos, int _yPos, std::string _fontName, int _fontSize)
-	: mMotor(_motor)
-	, mName(_name)
-	, mValue(_value)
-	{
-		mLabel = new TextLabel(getLabel(_name, _value), _xPos, _yPos, _fontName, _fontSize);
-	}
-
-	void update() 
-	{
-		mLabel->setText(getLabel());
-	}
-
-	void render(SDL_Renderer* renderer)
-	{
-		mValue = mMotor->getSpeed();
-		mLabel->render(renderer);
-	}
-
-	void addValue(int _value)
-	{
-		mValue += _value;
-		if (mValue > 100)
-		{
-			mValue = 100;
-		} 
-		else if (mValue < 0)
-		{
-			mValue = 0;
-		}
-	}
-
-private:
-
-	std::string getLabel(std::string _name, int _value)
-	{
-		std::stringstream label;
-		label << "Motor ";
-		label << _name;
-		label << ": ";
-		label << _value;
-		label << " %";
-
-		return label.str();
-	}
-
-	std::string getLabel()
-	{
-		return getLabel(mName, mValue);
-	}
-
-	Motor* mMotor;
-
-	std::string mName;
-	int mValue;
-	TextLabel* mLabel;
-
-};
+#include<vector>
 
 class Screen
+{
+public:
+
+	Screen(SDL_Renderer* renderer, std::string title);
+	virtual ~Screen();
+	virtual void update(KeyStateArray &keyStateArray) = 0;
+	virtual void render() const = 0;
+
+protected:
+
+	virtual void initialize();
+
+	SDL_Renderer* mRenderer;
+	std::vector<Widget*> mWidgets;
+	std::string mTitle;
+};
+
+
+// TODO: Move this drone screen
+/*class Screen
 {
 public:
 
@@ -175,6 +78,6 @@ private:
 	MotorIndicator* mMotor3Indicator;
 	MotorIndicator* mMotor4Indicator;
 
-};
+};*/
 
 #endif

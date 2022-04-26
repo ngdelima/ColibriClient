@@ -1,4 +1,4 @@
-#include"CommandDispatcher.h"
+#include"Controller/CommandDispatcher.h"
 
 CommandDispatcher::CommandDispatcher()
 : mPort(mIo, "/dev/ttyUSB0")

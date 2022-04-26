@@ -1,4 +1,4 @@
-#include"Drone.h"
+#include"Model/Drone.h"
 
 Motor::Motor(int _speed) : mSpeed(_speed) {}
 
@@ -44,7 +44,7 @@ Motor* Drone::getMotor2() { return &mMotor2; }
 Motor* Drone::getMotor3() { return &mMotor3; }
 Motor* Drone::getMotor4() { return &mMotor4; }
 
-void Drone::onNotify(INPUT_EVENT _event)
+/*void Drone::onNotify(INPUT_EVENT _event)
 {
 	switch (_event)
 	{
@@ -111,4 +111,4 @@ void Drone::onNotify(INPUT_EVENT _event)
 		default:
 			break;
 	}
-}
+}*/
