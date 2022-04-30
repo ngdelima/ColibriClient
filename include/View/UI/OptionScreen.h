@@ -9,8 +9,8 @@ class OptionScreen : public Screen
 {
 public:
 
-	OptionScreen(SDL_Renderer* renderer, std::string title)
-	: Screen(renderer, title)
+	OptionScreen(ViewMediator* viewMediator, SDL_Renderer* renderer, std::string title)
+	: Screen(viewMediator, renderer, title)
 	{
 		initialize();
 	}
@@ -18,8 +18,9 @@ public:
 	~OptionScreen()
 	{}
 	
-	void update(KeyStateArray &keyStateArray) override
+	bool update(KeyStateArray &keyStateArray) override
 	{
+		return false;
 	}
 	
 	void render() const override
@@ -29,6 +30,9 @@ public:
 			widget->render();
 		}
 	}
+
+	void onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification) override
+	{}
 
 private:
 

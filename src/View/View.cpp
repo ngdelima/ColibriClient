@@ -3,7 +3,8 @@
 #include<thread>
 
 View::View()
-: mWindow(nullptr)
+: ViewMediatorComponent(nullptr)
+, mWindow(nullptr)
 , mRenderer(nullptr)
 , mScreenManager(nullptr)
 , mInputManager(nullptr)
@@ -57,11 +58,19 @@ void View::initialize()
 		// Assert
 	}
 
-	mScreenManager = new ScreenManager(mWindow, mRenderer, mInputManager);
+	mViewMediator = new ViewMediator();
+	if(mViewMediator == nullptr)
+	{
+		// Assert
+	}
+	mViewMediator->setViewComponent(this);
+
+	mScreenManager = new ScreenManager(mViewMediator, mWindow, mRenderer, mInputManager);
 	if(mScreenManager == nullptr)
 	{
 		// Assert
 	}
+
 
 	// CommandDispatcher commandDispatcher;
 	// Drone drone(&commandDispatcher);
@@ -106,4 +115,9 @@ void View::viewLoop()
 		SDL_Delay(10);
 	}
 	deintialize();
+}
+
+void View::onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification)
+{
+
 }

@@ -9,8 +9,8 @@ class DroneScreen : public Screen
 {
 public:
 
-	DroneScreen(SDL_Renderer* renderer, std::string title)
-	: Screen(renderer, title)
+	DroneScreen(ViewMediator* viewMediator, SDL_Renderer* renderer, std::string title)
+	: Screen(viewMediator, renderer, title)
 	{
 		initialize();
 	}
@@ -18,8 +18,9 @@ public:
 	~DroneScreen()
 	{}
 	
-	void update(KeyStateArray &keyStateArray) override
+	bool update(KeyStateArray &keyStateArray) override
 	{
+		return true;
 	}
 	
 	void render() const override
@@ -30,12 +31,17 @@ public:
 		}
 	}
 
+	void onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification) override
+	{}
+
 private:
 
 	void initialize() override
 	{
 		TextLabel* testLabel = new TextLabel(mRenderer, "Drone screen, IMPLEMENT", 0, 0, "./resources/FreeMono.ttf", 24);
 		mWidgets.push_back(dynamic_cast<Widget*>(testLabel));
+
+		// Send command to start Drone object
 	}
 
 };

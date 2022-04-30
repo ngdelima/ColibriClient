@@ -8,21 +8,24 @@
 
 //#include"Drone.h"
 
+#include"View/ViewMediator.h"
 #include"View/Input/InputMap.h"
 #include"View/Widgets/Widgets.h"
+#include"View/ScreenId.h"
 
 #include<iostream>
 #include<string>
 #include<vector>
 
-class Screen
+class Screen : public ViewMediatorComponent
 {
 public:
 
-	Screen(SDL_Renderer* renderer, std::string title);
+	Screen(ViewMediator* viewMediator, SDL_Renderer* renderer, std::string title);
 	virtual ~Screen();
-	virtual void update(KeyStateArray &keyStateArray) = 0;
+	virtual bool update(KeyStateArray &keyStateArray) = 0;
 	virtual void render() const = 0;
+	SCREEN_ID getNextScreen() const { return mNextScreen; }
 
 protected:
 
@@ -30,7 +33,9 @@ protected:
 
 	SDL_Renderer* mRenderer;
 	std::vector<Widget*> mWidgets;
+	std::vector<ClickableWidget*> mClickableWidgets;
 	std::string mTitle;
+	SCREEN_ID mNextScreen;
 };
 
 

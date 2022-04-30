@@ -6,6 +6,7 @@
 //#include"SDL/SDL_image.h"
 #include"SDL2/SDL_ttf.h"
 
+#include<functional>
 #include<string>
 
 class Widget
@@ -22,6 +23,27 @@ protected:
 	SDL_Renderer* mRenderer;
 	int mXPos;
 	int mYPos;
+};
+
+class ClickableWidget : public Widget
+{
+public:
+
+	ClickableWidget(SDL_Renderer* renderer,
+					int xPos,
+					int yPos,
+					int xEndPos,
+					int yEndPos,
+					std::function<void()> callback);
+	bool isClicked(int xClickPos, int yClickPos);
+	void onClick();
+	virtual void setIsHighlighted(bool highlight) = 0;
+
+protected:
+
+	int mXEndPos;
+	int mYEndPos;
+	std::function<void()> mCallback;
 };
 
 /*class MotorIndicator

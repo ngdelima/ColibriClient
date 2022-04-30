@@ -4,14 +4,15 @@ MenuTile::MenuTile(	SDL_Renderer* renderer,
 					std::string text,
 					int xPos,
 					int yPos,
+					int xEndPos,
+					int yEndPos,
 					std::string fontName,
 					int fontSize,
 					std::function<void()> callback)
-: Widget(renderer, xPos, yPos)
+: ClickableWidget(renderer, xPos, yPos, xEndPos, yEndPos, callback)
 , mText(text)
 , mFontName(fontName)
 , mFontSize(fontSize)
-, mCallback(callback)
 , mIsHighlighted(false)
 {
 }
@@ -56,11 +57,6 @@ void MenuTile::render() const
 void MenuTile::update()
 {
 
-}
-
-void MenuTile::onClick()
-{
-	mCallback();
 }
 
 void MenuTile::setIsHighlighted(bool highlight)

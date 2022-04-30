@@ -4,17 +4,20 @@
 #include"SDL2/SDL.h"
 #include"SDL2/SDL_ttf.h"
 
+#include"View/ViewMediator.h"
 #include"View/ScreenManager.h"
 #include"View/Input/InputManager.h"
+#include"View/Commands/ViewCommands.h"
 #include<iostream>
 
-class View
+class View : public ViewMediatorComponent
 {
 public:
 	
 	View();
 	~View();
 	void run();
+	void onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification) override;
 
 private:
 
