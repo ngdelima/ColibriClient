@@ -18,6 +18,7 @@ public:
 	~View();
 	void run();
 	void onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification) override;
+	void onViewCommandSent(ViewCommand* viewCommand) override;
 
 private:
 

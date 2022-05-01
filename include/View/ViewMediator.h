@@ -1,6 +1,8 @@
 #ifndef VIEW_MEDIATOR_H
 #define VIEW_MEDIATOR_H
 
+#include"View/Commands/ViewCommands.h"
+
 enum class VIEW_NOTIFICATION
 {
 	FIRST = 0,
@@ -21,6 +23,7 @@ public:
 	~ViewMediator();
 
 	void notify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification);
+	void sendViewCommand(ViewCommand* viewCommand);
 	void setViewComponent(ViewMediatorComponent* viewComponent)
 	{ mViewComponent = viewComponent; }
 	void setScreenManagerComponent(ViewMediatorComponent* screenManagerComponent)
@@ -44,6 +47,7 @@ public:
 	{}
 
 	virtual void onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification) = 0;
+	virtual void onViewCommandSent(ViewCommand* viewCommand){}
 
 	//void setMediator(ViewMediator* viewMediator) { mViewMediator = viewMediator; }
 

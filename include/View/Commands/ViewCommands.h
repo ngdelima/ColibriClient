@@ -24,17 +24,17 @@ enum class MOTOR_ID
 class ViewCommand
 {
 public:
-	ViewCommand(COMMAND_ID id)
+	ViewCommand(VIEW_COMMAND_ID id)
 	: mId(id)
 	{}
 
-	COMMAND_ID mId;
+	VIEW_COMMAND_ID mId;
 };
 
 class StartDroneViewCommand : public ViewCommand
 {
 public:
-	StartDroneViewCommand(COMMAND_ID id)
+	StartDroneViewCommand(VIEW_COMMAND_ID id)
 	: ViewCommand(id)
 	{}
 	// TODO: No params at the moment, later add usb port and other stuff
@@ -43,20 +43,20 @@ public:
 class SetMotorSpeedViewCommand : public ViewCommand
 {
 public:
-	SetMotorSpeedViewCommand(COMMAND_ID id, MOTOR_ID motorId, uint8_t speed)
+	SetMotorSpeedViewCommand(VIEW_COMMAND_ID id, MOTOR_ID motorId, int speed)
 	: ViewCommand(id)
 	, mMotorId(motorId)
 	, mMotorSpeed(speed)
 	{}
 
 	MOTOR_ID mMotorId;
-	uint8_t mMotorSpeed;
+	int mMotorSpeed;
 };
 
 class StopDroneViewCommand : public ViewCommand
 {
 public:
-	StopDroneViewCommand(COMMAND_ID id)
+	StopDroneViewCommand(VIEW_COMMAND_ID id)
 	: ViewCommand(id)
 	{}
 	// TODO: No params at the moment, later add usb port and other stuff

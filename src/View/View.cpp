@@ -121,3 +121,26 @@ void View::onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICAT
 {
 
 }
+
+void View::onViewCommandSent(ViewCommand* viewCommand)
+{
+	switch(viewCommand->mId)
+	{
+		case VIEW_COMMAND_ID::COMMAND_START_DRONE:
+		{
+			std::cout << "View: onViewCommandSent: Start Drone" << '\n';
+			break;
+		}
+		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED:
+		{
+			std::cout << "View: onViewCommandSent: Set Motor Speed" << '\n';
+			break;
+		}
+		case VIEW_COMMAND_ID::COMMAND_STOP_DRONE:
+		{
+			std::cout << "View: onViewCommandSent: Stop Drone" << '\n';
+			break;
+		}
+		default: break;
+	}	
+}
