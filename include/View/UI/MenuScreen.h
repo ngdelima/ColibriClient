@@ -30,11 +30,6 @@ public:
 			mCurrentClickableWidget->onClick();
 		}
 
-		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ENTER)] == INPUT_STATE::PRESSED)
-		{
-			mCurrentClickableWidget->onClick();
-		}
-
 		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_DOWN)] == INPUT_STATE::PRESSED)
 		{
 			if(mDownKeyWasPressed == false)
