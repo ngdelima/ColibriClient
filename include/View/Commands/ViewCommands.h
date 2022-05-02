@@ -28,6 +28,8 @@ public:
 	: mId(id)
 	{}
 
+	virtual ~ViewCommand(){}
+
 	VIEW_COMMAND_ID mId;
 };
 

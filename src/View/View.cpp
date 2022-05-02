@@ -133,7 +133,12 @@ void View::onViewCommandSent(ViewCommand* viewCommand)
 		}
 		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED:
 		{
-			std::cout << "View: onViewCommandSent: Set Motor Speed" << '\n';
+			SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+					dynamic_cast<SetMotorSpeedViewCommand*>(viewCommand);
+			std::cout << "View: onViewCommandSent: Set Motor Speed: " 
+				<< " MotorId" << (int)setMotorSpeedViewCommand->mMotorId 
+				<< " Speed" << setMotorSpeedViewCommand->mMotorSpeed
+				<< '\n';
 			break;
 		}
 		case VIEW_COMMAND_ID::COMMAND_STOP_DRONE:
