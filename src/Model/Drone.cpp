@@ -1,4 +1,5 @@
 #include"Model/Drone.h"
+#include<iostream>
 
 Motor::Motor(int _speed) : mSpeed(_speed) {}
 
@@ -29,6 +30,16 @@ void Motor::clampSpeed()
 	{
 		mSpeed = 0;
 	}
+}
+
+Drone::Drone()
+: mCommandDispatcher(nullptr)
+, mMotor1(0)
+, mMotor2(0)
+, mMotor3(0)
+, mMotor4(0)
+{
+	std::cout << "Drone: Drone instance created" << '\n';
 }
 
 Drone::Drone(CommandDispatcher* _commandDispatcher)

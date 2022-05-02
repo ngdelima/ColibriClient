@@ -28,6 +28,7 @@ class Drone
 {
 public:
 
+	Drone();
 	Drone(CommandDispatcher* _commandDispatcher);
 
 	Motor* getMotor1();

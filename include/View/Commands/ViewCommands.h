@@ -1,6 +1,10 @@
 #ifndef VIEW_COMMANDS_H
 #define VIEW_COMMANDS_H
 
+#include<queue>
+#include<mutex>
+#include<iostream>
+
 enum class VIEW_COMMAND_ID
 {
 	COMMAND_FIRST = 0,
@@ -62,6 +66,43 @@ public:
 	: ViewCommand(id)
 	{}
 	// TODO: No params at the moment, later add usb port and other stuff
+};
+
+class ThreadSafeViewCommandQueue
+{
+public:
+
+	void addCommand(ViewCommand* viewCommand)
+	{
+		mQueueMutex.lock();
+
+		mQueue.push(viewCommand);
+
+		mQueueMutex.unlock();
+	}
+
+	ViewCommand* getCommand()
+	{
+		ViewCommand* viewCommand = nullptr;
+
+		mQueueMutex.lock();
+
+		if(mQueue.size() > 0)
+		{
+			viewCommand = mQueue.front();
+			mQueue.pop();	
+		}
+
+		mQueueMutex.unlock();
+
+		return viewCommand;
+	}
+
+private:
+
+	std::queue<ViewCommand*> mQueue;
+	std::mutex mQueueMutex;
+
 };
 
 #endif

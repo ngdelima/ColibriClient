@@ -12,7 +12,7 @@ void CommandDispatcher::setMotorSpeedCommand(uint8_t _motorId, uint8_t _speed)
 	if (_motorId >= 0x0 && _motorId < 0x4)
 	{
 		uint8_t cmd[4];
-		cmd[0] = COMMAND_SET_MOTOR_SPEED;
+		cmd[0] = COMMAND_SET_MOTOR_SPEED_BYTE;
 		cmd[1] = _motorId;
 		cmd[2] = _speed;
 		cmd[3] = '\n';

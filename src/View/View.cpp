@@ -8,6 +8,7 @@ View::View()
 , mRenderer(nullptr)
 , mScreenManager(nullptr)
 , mInputManager(nullptr)
+, mViewCommandQueue(nullptr)
 {
 }
 
@@ -124,28 +125,8 @@ void View::onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICAT
 
 void View::onViewCommandSent(ViewCommand* viewCommand)
 {
-	switch(viewCommand->mId)
+	if(viewCommand != nullptr)
 	{
-		case VIEW_COMMAND_ID::COMMAND_START_DRONE:
-		{
-			std::cout << "View: onViewCommandSent: Start Drone" << '\n';
-			break;
-		}
-		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED:
-		{
-			SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
-					dynamic_cast<SetMotorSpeedViewCommand*>(viewCommand);
-			std::cout << "View: onViewCommandSent: Set Motor Speed: " 
-				<< " MotorId" << (int)setMotorSpeedViewCommand->mMotorId 
-				<< " Speed" << setMotorSpeedViewCommand->mMotorSpeed
-				<< '\n';
-			break;
-		}
-		case VIEW_COMMAND_ID::COMMAND_STOP_DRONE:
-		{
-			std::cout << "View: onViewCommandSent: Stop Drone" << '\n';
-			break;
-		}
-		default: break;
-	}	
+		mViewCommandQueue->addCommand(viewCommand);
+	}
 }
