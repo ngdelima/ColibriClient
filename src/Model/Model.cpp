@@ -1,10 +1,14 @@
 #include"Model/Model.h"
 #include<thread>
-#include<iostream>
 
-Model::Model()
+Model::Model(Communication* communication)
+: mCommunication(communication)
+, mDrone(nullptr)
+, mDroneStarted(false)
 {
-
+	// TODO: Assert on Comms nullptr
+	Logging::log("Model", "Construction");
+	if(mCommunication == nullptr) Logging::log("Model", "Null communication");
 }
 
 void Model::run()
@@ -28,40 +32,28 @@ void Model::modelLoop()
 
 void Model::executeCommand(ViewCommand* viewCommand)
 {
-	switch(viewCommand->mId)
+	Logging::log("Model", "executeCommand");
+	if(viewCommand != nullptr)
 	{
-		case VIEW_COMMAND_ID::COMMAND_START_DRONE:
+		if( VIEW_COMMAND_ID::FIRST_DRONE_COMMAND <= viewCommand->mId &&
+			viewCommand->mId <= VIEW_COMMAND_ID::LAST_DRONE_COMMAND)
 		{
-			startDrone();
-			break;
+			if(mDroneStarted)
+			{
+				mDrone->addCommand(viewCommand);
+			}
+			else
+			{
+				startDrone();
+			}
 		}
-		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED:
-		{
-			SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
-					dynamic_cast<SetMotorSpeedViewCommand*>(viewCommand);
-			std::cout << "Model: onViewCommandSent: Set Motor Speed: " 
-				<< " MotorId" << (int)setMotorSpeedViewCommand->mMotorId 
-				<< " Speed" << setMotorSpeedViewCommand->mMotorSpeed
-				<< '\n';
-			break;
-		}
-		case VIEW_COMMAND_ID::COMMAND_STOP_DRONE:
-		{
-			std::cout << "Model: onViewCommandSent: Stop Drone" << '\n';
-			break;
-		}
-		default: break;
-	}	
+	}
 }
 
 void Model::startDrone()
 {
-	mDrone = new Drone();
 	mDroneStarted = true;
-}
-
-void Model::stopDrone()
-{
-	delete mDrone;
-	mDroneStarted = false;
+	mCommunication->startDroneCommunication();
+	mDrone = new Drone(mCommunication);
+	mDrone->run();
 }

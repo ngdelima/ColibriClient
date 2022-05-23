@@ -18,6 +18,7 @@ private:
 	void startModel();	
 	void startView();
 
+	Communication mCommunication;
 	Model mModel;
 	View mView;
 	ThreadSafeViewCommandQueue mViewCommandQueue;

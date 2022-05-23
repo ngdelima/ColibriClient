@@ -3,14 +3,16 @@
 
 #include<queue>
 #include<mutex>
-#include<iostream>
 
 enum class VIEW_COMMAND_ID
 {
 	COMMAND_FIRST = 0,
-	COMMAND_START_DRONE = COMMAND_FIRST,
+	FIRST_DRONE_COMMAND = COMMAND_FIRST, 
+	COMMAND_START_DRONE = FIRST_DRONE_COMMAND,
 	COMMAND_SET_MOTOR_SPEED,
+	COMMAND_SET_MOTOR_SPEED_DELTA,
 	COMMAND_STOP_DRONE,
+	LAST_DRONE_COMMAND = COMMAND_STOP_DRONE,
 	COMMAND_LAST = COMMAND_STOP_DRONE,
 };
 
@@ -58,6 +60,20 @@ public:
 	MOTOR_ID mMotorId;
 	int mMotorSpeed;
 };
+
+class SetMotorSpeedDeltaViewCommand : public ViewCommand
+{
+public:
+	SetMotorSpeedDeltaViewCommand(VIEW_COMMAND_ID id, MOTOR_ID motorId, int speed)
+	: ViewCommand(id)
+	, mMotorId(motorId)
+	, mMotorSpeed(speed)
+	{}
+
+	MOTOR_ID mMotorId;
+	int mMotorSpeed;
+};
+
 
 class StopDroneViewCommand : public ViewCommand
 {

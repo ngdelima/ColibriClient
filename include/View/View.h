@@ -8,7 +8,6 @@
 #include"View/ScreenManager.h"
 #include"View/Input/InputManager.h"
 #include"View/Commands/ViewCommands.h"
-#include<iostream>
 
 class Controller;
 

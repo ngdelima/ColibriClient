@@ -1,125 +1,97 @@
 #include"Model/Drone.h"
-#include<iostream>
+#include"Logging/Logging.h"
 
-Motor::Motor(int _speed) : mSpeed(_speed) {}
-
-void Motor::addSpeed(int _speed) 
+Drone::Drone(Communication* communication)
+: mCommunication(communication)
 {
-	if( (mSpeed + _speed) < 0)
-		mSpeed = 0;
-	else
-		mSpeed += _speed;
-	clampSpeed();
+	mMotorSpeeds.insert(std::pair<MOTOR_ID, int>(MOTOR_ID::NORTH_EAST_MOTOR, 0));
+	mMotorSpeeds.insert(std::pair<MOTOR_ID, int>(MOTOR_ID::NORTH_WEST_MOTOR, 0));
+	mMotorSpeeds.insert(std::pair<MOTOR_ID, int>(MOTOR_ID::SOUTH_EAST_MOTOR, 0));
+	mMotorSpeeds.insert(std::pair<MOTOR_ID, int>(MOTOR_ID::SOUTH_WEST_MOTOR, 0));
 }
 
-void Motor::setSpeed(int _speed) 
+void Drone::run()
 {
-	mSpeed = _speed;
-	clampSpeed();
-}
+	Logging::log("Drone", "Start drone from run");
 
-int Motor::getSpeed() { return mSpeed; }
+	StartDroneViewCommand* startDroneViewCommand =
+		new StartDroneViewCommand(VIEW_COMMAND_ID::COMMAND_START_DRONE);
 
-void Motor::clampSpeed()
-{
-	if (mSpeed > 100)
+	uint8_t* cmd = nullptr;
+	int size = CommandSerializer::serializeCommand(startDroneViewCommand, &cmd);
+	mCommunication->send(cmd, size);
+
+	// Wait for drone response, possible memory leak
+	std::string reading;
+	while( !mCommunication->getReading(&reading) &&
+			reading != "Start drone")
 	{
-		mSpeed = 100;
+		Logging::log("Drone", "Waiting for drone start confirmation");
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+		mCommunication->send(cmd, size);
 	}
-	else if (mSpeed < 0)
-	{
-		mSpeed = 0;
-	}
+	Logging::log("Drone", "Received drone started message, running drone");
 }
 
-Drone::Drone()
-: mCommandDispatcher(nullptr)
-, mMotor1(0)
-, mMotor2(0)
-, mMotor3(0)
-, mMotor4(0)
+void Drone::addCommand(ViewCommand* viewCommand)
 {
-	std::cout << "Drone: Drone instance created" << '\n';
-}
-
-Drone::Drone(CommandDispatcher* _commandDispatcher)
-: mCommandDispatcher(_commandDispatcher)
-, mMotor1(0)
-, mMotor2(0)
-, mMotor3(0)
-, mMotor4(0)
-{}
-
-Motor* Drone::getMotor1() { return &mMotor1; }
-Motor* Drone::getMotor2() { return &mMotor2; }
-Motor* Drone::getMotor3() { return &mMotor3; }
-Motor* Drone::getMotor4() { return &mMotor4; }
-
-/*void Drone::onNotify(INPUT_EVENT _event)
-{
-	switch (_event)
+	//TODO: Add params: Logging::log("Drone", "addCommand", (int)viewCommand->mId);
+	Logging::log("Drone", "addCommand");
+	switch(viewCommand->mId)
 	{
-		case INPUT_EVENT::INPUT_EVENT_LEFT_STICK_UP:
+		case VIEW_COMMAND_ID::COMMAND_START_DRONE:
 		{
-			mMotor1.addSpeed(5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_1, mMotor1.getSpeed());
+			Logging::log("Drone", "Start drone");
+			uint8_t* cmd = nullptr;
+			int size = CommandSerializer::serializeCommand(viewCommand, &cmd);
+			mCommunication->send(cmd, size);
 			break;
 		}
-		case INPUT_EVENT::INPUT_EVENT_LEFT_STICK_DOWN:
+		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED:
 		{
-			mMotor1.addSpeed(-5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_1, mMotor1.getSpeed());
+			Logging::log("Drone", "Set motor speed");
+			SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+					dynamic_cast<SetMotorSpeedViewCommand*>(viewCommand);
+
+			int speed = setMotorSpeedViewCommand->mMotorSpeed;
+			if(speed < 0) speed = 0;
+			else if(100 < speed) speed = 100;
+			setMotorSpeedViewCommand->mMotorSpeed = speed;
+
+			MOTOR_ID motorId = setMotorSpeedViewCommand->mMotorId;
+			mMotorSpeeds[motorId] = speed;
+
+			uint8_t* cmd;
+			int size = CommandSerializer::serializeCommand(viewCommand, &cmd);
+			mCommunication->send(cmd, size);
 			break;
 		}
-		case INPUT_EVENT::INPUT_EVENT_LEFT_STICK_RIGHT:
+		case VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED_DELTA:
 		{
-			mMotor2.addSpeed(5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_2, mMotor2.getSpeed());
+			Logging::log("Drone:", "Set motor speed delta");
+			SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+					dynamic_cast<SetMotorSpeedViewCommand*>(viewCommand);
+
+/*			MOTOR_ID motorId = setMotorSpeedViewCommand->mMotorId;
+			int speed =  setMotorSpeedViewCommand->mMotorSpeed;
+			if(speed < 0) speed = 0;
+			else if(100 < speed) speed = 100;
+			mMotorSpeeds[motorId] = speed;
+*/
+
+			uint8_t* cmd;
+			int size = CommandSerializer::serializeCommand(viewCommand, &cmd);
+			mCommunication->send(cmd, size);
 			break;
 		}
-		case INPUT_EVENT::INPUT_EVENT_LEFT_STICK_LEFT:
+		case VIEW_COMMAND_ID::COMMAND_STOP_DRONE:
 		{
-			mMotor2.addSpeed(-5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_2, mMotor2.getSpeed());
+			Logging::log("Drone: ", "Stop drone");
+			uint8_t* cmd;
+			int size = CommandSerializer::serializeCommand(viewCommand, &cmd);
+			mCommunication->send(cmd, size);
 			break;
 		}
-		case INPUT_EVENT::INPUT_EVENT_RIGHT_STICK_UP:
-		{
-			mMotor3.addSpeed(5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_3, mMotor3.getSpeed());
-			break;
-		}
-		case INPUT_EVENT::INPUT_EVENT_RIGHT_STICK_DOWN:
-		{
-			mMotor3.addSpeed(-5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_3, mMotor3.getSpeed());
-			break;
-		}
-		case INPUT_EVENT::INPUT_EVENT_RIGHT_STICK_RIGHT:
-		{
-			mMotor4.addSpeed(5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_4, mMotor4.getSpeed());
-			break;
-		}
-		case INPUT_EVENT::INPUT_EVENT_RIGHT_STICK_LEFT:
-		{
-			mMotor4.addSpeed(-5);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_4, mMotor4.getSpeed());
-			break;
-		}
-		case INPUT_EVENT::INPUT_EVENT_FULL_STOP:
-		{
-			mMotor1.setSpeed(0);
-			mMotor2.setSpeed(0);
-			mMotor3.setSpeed(0);
-			mMotor4.setSpeed(0);
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_1, mMotor1.getSpeed());
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_2, mMotor2.getSpeed());
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_3, mMotor3.getSpeed());
-			mCommandDispatcher->setMotorSpeedCommand(MOTOR_4, mMotor4.getSpeed());
-			break;
-		}
-		default:
-			break;
-	}
-}*/
+		default: break;
+	}	
+}

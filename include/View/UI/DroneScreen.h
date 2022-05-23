@@ -4,7 +4,7 @@
 #include"View/Screen.h"
 #include"View/Widgets/TextLabel.h"
 #include"View/Commands/ViewCommands.h"
-#include<iostream>
+#include"Logging/Logging.h"
 #include<chrono>
 
 class DroneScreen : public Screen
@@ -26,9 +26,27 @@ public:
 	
 	bool update(KeyStateArray &keyStateArray) override
 	{
-		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_DOWN)] == INPUT_STATE::PRESSED)
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_W)] == INPUT_STATE::PRESSED)
 		{
-			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_ARROW_DOWN) > std::chrono::milliseconds(200))
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_W) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::NORTH_WEST_MOTOR,
+														5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_W);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_W);
+		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_S)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_S) > std::chrono::milliseconds(200))
 			{
 				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
 						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
@@ -36,20 +54,57 @@ public:
 														-5);
 				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
 
-				resetKeyPressedTime(KEY_ID::KEY_ARROW_DOWN);
+				resetKeyPressedTime(KEY_ID::KEY_S);
 			}
 		}
 		else
 		{
-			resetKeyPressedTime(KEY_ID::KEY_ARROW_DOWN);
+			resetKeyPressedTime(KEY_ID::KEY_S);
 		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_D)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_D) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::SOUTH_WEST_MOTOR,
+														5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_D);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_D);
+		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_A)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_A) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::SOUTH_WEST_MOTOR,
+														-5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_A);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_A);
+		}
+		
 		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_UP)] == INPUT_STATE::PRESSED)
 		{
 			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_ARROW_UP) > std::chrono::milliseconds(200))
 			{
 				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
 						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
-														MOTOR_ID::NORTH_WEST_MOTOR,
+														MOTOR_ID::NORTH_EAST_MOTOR,
 														5);
 				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
 
@@ -60,6 +115,62 @@ public:
 		{
 			resetKeyPressedTime(KEY_ID::KEY_ARROW_UP);
 		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_DOWN)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_ARROW_DOWN) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::NORTH_EAST_MOTOR,
+														-5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_ARROW_DOWN);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_ARROW_DOWN);
+		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_RIGHT)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_ARROW_RIGHT) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::SOUTH_EAST_MOTOR,
+														5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_ARROW_RIGHT);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_ARROW_RIGHT);
+		}
+
+		if(keyStateArray[static_cast<size_t>(KEY_ID::KEY_ARROW_LEFT)] == INPUT_STATE::PRESSED)
+		{
+			if(getKeyPressedTime<std::chrono::milliseconds>(KEY_ID::KEY_ARROW_LEFT) > std::chrono::milliseconds(200))
+			{
+				SetMotorSpeedViewCommand* setMotorSpeedViewCommand =
+						new SetMotorSpeedViewCommand(	VIEW_COMMAND_ID::COMMAND_SET_MOTOR_SPEED,
+														MOTOR_ID::SOUTH_EAST_MOTOR,
+														-5);
+				mViewMediator->sendViewCommand(setMotorSpeedViewCommand);
+
+				resetKeyPressedTime(KEY_ID::KEY_ARROW_LEFT);
+			}
+		}
+		else
+		{
+			resetKeyPressedTime(KEY_ID::KEY_ARROW_LEFT);
+		}
+
+
 
 		//return !mShouldNavigate;
 		return true;

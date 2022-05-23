@@ -3,7 +3,6 @@
 
 #include"View/Screen.h"
 #include"View/Widgets/TextLabel.h"
-#include<iostream>
 
 class OptionScreen : public Screen
 {

@@ -3,7 +3,7 @@
 #include<chrono>
 
 Controller::Controller()
-: mModel()
+: mModel(&mCommunication)
 , mView()
 {
 
