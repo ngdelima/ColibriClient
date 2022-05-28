@@ -14,3 +14,8 @@ void ViewMediator::notify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOT
 	mScreenManagerComponent->onNotify(viewMediatorComponent, notification);
 	mViewComponent->onNotify(viewMediatorComponent, notification);
 }
+
+void ViewMediator::sendViewCommand(ViewCommand* viewCommand)
+{
+	mViewComponent->onViewCommandSent(viewCommand);
+}

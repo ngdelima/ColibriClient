@@ -3,6 +3,7 @@
 
 #include"Model/Model.h"
 #include"View/View.h"
+#include"View/Commands/ViewCommands.h"
 
 class Controller
 {
@@ -13,12 +14,16 @@ public:
 	void run();
 
 private:
-	
+
+	void startModel();	
 	void startView();
 
+	Communication mCommunication;
 	Model mModel;
 	View mView;
+	ThreadSafeViewCommandQueue mViewCommandQueue;
 };
+
 
 
 #endif

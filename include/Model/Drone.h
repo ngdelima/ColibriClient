@@ -1,50 +1,33 @@
 #ifndef DRONE_H
 #define DRONE_H
 
-#include"Controller/CommandDispatcher.h"
-
-#define MOTOR_1 0x0
-#define MOTOR_2 0x1
-#define MOTOR_3 0x2
-#define MOTOR_4 0x3
-
-class Motor
-{
-public:
-	Motor(int _speed);
-
-	void addSpeed(int _speed);
-	void setSpeed(int _speed);
-	int getSpeed();
-
-private:
-
-	uint8_t mSpeed;
-
-	void clampSpeed();
-};
+#include"Communication/Communication.h"
+#include"View/Commands/ViewCommands.h"
+#include"Model/CommandSerializer.h"
+#include"Logging/Logging.h"
+#include<map>
 
 class Drone
 {
 public:
 
-	Drone(CommandDispatcher* _commandDispatcher);
+	Drone(Communication* communication);
 
-	Motor* getMotor1();
-	Motor* getMotor2();
-	Motor* getMotor3();
-	Motor* getMotor4();
-
-	void onNotify();
+	void run();
+	void addCommand(ViewCommand* viewCommand);
 
 private:
 
-	Motor mMotor1;
-	Motor mMotor2;
-	Motor mMotor3;
-	Motor mMotor4;
+	bool start();
+	bool connect();
 
-	CommandDispatcher* mCommandDispatcher;
+	std::map<MOTOR_ID, int> mMotorSpeeds;
+
+	Communication* mCommunication;
+	std::queue<std::string> mRecievedQueue;
+
+	bool mDroneIsRunning;
+	bool mDroneIsConnected;
 
 };
 

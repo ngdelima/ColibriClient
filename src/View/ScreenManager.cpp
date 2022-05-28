@@ -59,7 +59,7 @@ void ScreenManager::changeScreen(SCREEN_ID screenId, std::string title)
 {
 	if(mCurrentScreen != nullptr) delete mCurrentScreen;
 	mCurrentScreen = ScreenFactory::createScreen(screenId, mRenderer, title, mViewMediator);
-	if(mCurrentScreen == nullptr) std::cout << "Null screen" << '\n';
+	if(mCurrentScreen == nullptr) Logging::log("ScreenManager", "Nullptr, todo: should assert.");
 	mNextScreen = SCREEN_ID::NO_SCREEN;
 }
 
@@ -69,7 +69,6 @@ void ScreenManager::onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_
 	{
 		case VIEW_NOTIFICATION::SCREEN_NAVIGATE:
 		{
-			std::cout << "Screen manager: Must navigate" << '\n';
 			mNextScreen = mCurrentScreen->getNextScreen();
 			break;
 		}

@@ -12,7 +12,6 @@
 #include<map>
 #include<mutex>
 #include<algorithm>
-#include<iostream>
 
 class InputManager
 {
@@ -60,7 +59,6 @@ private:
 		while (true)
 		{
 			mKeyStateArrayMutex.lock();
-			// std::cout << "Updating input" << '\n';
 
 			const Uint8* keystate = SDL_GetKeyboardState(NULL);
 

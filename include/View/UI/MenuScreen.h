@@ -5,7 +5,6 @@
 #include"View/Screen.h"
 #include"View/Widgets/MenuTile.h"
 #include"View/Commands/ViewCommands.h"
-#include<iostream>
 #include<functional>
 
 class MenuScreen : public Screen
@@ -60,7 +59,6 @@ public:
 	
 	void render() const override
 	{
-		//std::cout << "Menu screen rendered" << '\n';
 		for(const auto& widget : mWidgets)
 		{
 			widget->render();

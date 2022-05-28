@@ -12,12 +12,13 @@ include_directories(/usr/include)
 link_directories(/usr/lib/x86_64-linux-gnu)
 
 file(GLOB SOURCES "src/*.cpp")
+file(GLOB CommunicationSrc "src/Communication/*.cpp")
 file(GLOB ControllerSrc "src/Controller/*.cpp")
 file(GLOB ModelSrc "src/Model/*.cpp")
 file(GLOB ViewSrc "src/View/*.cpp")
 file(GLOB ViewUISrc "src/View/UI/*.cpp")
 file(GLOB ViewUISrc "src/View/Widgets/*.cpp")
 
-add_executable(colibriClient ${SOURCES} ${ControllerSrc} ${ModelSrc} ${ViewSrc} ${ViewUISrc})
+add_executable(colibriClient ${SOURCES} ${CommunicationSrc} ${ControllerSrc} ${ModelSrc} ${ViewSrc} ${ViewUISrc})
 
 target_link_libraries(colibriClient SDL2 SDL2_ttf boost_system pthread)

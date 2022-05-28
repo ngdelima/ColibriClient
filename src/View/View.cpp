@@ -8,6 +8,7 @@ View::View()
 , mRenderer(nullptr)
 , mScreenManager(nullptr)
 , mInputManager(nullptr)
+, mViewCommandQueue(nullptr)
 {
 }
 
@@ -120,4 +121,12 @@ void View::viewLoop()
 void View::onNotify(ViewMediatorComponent* viewMediatorComponent, VIEW_NOTIFICATION notification)
 {
 
+}
+
+void View::onViewCommandSent(ViewCommand* viewCommand)
+{
+	if(viewCommand != nullptr)
+	{
+		mViewCommandQueue->addCommand(viewCommand);
+	}
 }
