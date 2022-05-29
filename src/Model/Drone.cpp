@@ -95,3 +95,12 @@ void Drone::addCommand(ViewCommand* viewCommand)
 		default: break;
 	}	
 }
+
+int Drone::getMotorSpeed(MOTOR_ID motorId)
+{
+	if( MOTOR_ID::MOTOR_FIRST <= motorId &&
+		motorId <= MOTOR_ID::MOTOR_LAST)
+		return mMotorSpeeds[motorId];
+	else
+		return 0;
+}

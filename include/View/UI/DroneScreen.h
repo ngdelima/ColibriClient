@@ -5,6 +5,7 @@
 #include"View/Widgets/TextLabel.h"
 #include"View/Commands/ViewCommands.h"
 #include"Logging/Logging.h"
+#include"ViewModel/ViewModel.h"
 #include<chrono>
 
 class DroneScreen : public Screen
@@ -170,7 +171,7 @@ public:
 			resetKeyPressedTime(KEY_ID::KEY_ARROW_LEFT);
 		}
 
-
+		updateWidgets();
 
 		//return !mShouldNavigate;
 		return true;
@@ -191,13 +192,28 @@ private:
 
 	void initialize() override
 	{
-		TextLabel* testLabel = new TextLabel(mRenderer, "Drone screen, IMPLEMENT", 0, 0, "./resources/FreeMono.ttf", 24);
-		mWidgets.push_back(dynamic_cast<Widget*>(testLabel));
+		TextLabel* northEastMotorSpeedLabel = new TextLabel(mRenderer, "NE: 0", 0, 0, "./resources/FreeMono.ttf", 24);
+		mWidgets.push_back(dynamic_cast<Widget*>(northEastMotorSpeedLabel));
+
+		TextLabel* northWestMotorSpeedLabel = new TextLabel(mRenderer, "NW: 0", 0, 100, "./resources/FreeMono.ttf", 24);
+		mWidgets.push_back(dynamic_cast<Widget*>(northWestMotorSpeedLabel));
+
+		TextLabel* southEastMotorSpeedLabel = new TextLabel(mRenderer, "SE: 0", 0, 200, "./resources/FreeMono.ttf", 24);
+		mWidgets.push_back(dynamic_cast<Widget*>(southEastMotorSpeedLabel));
+
+		TextLabel* southWestMotorSpeedLabel = new TextLabel(mRenderer, "SW: 0", 0, 300, "./resources/FreeMono.ttf", 24);
+		mWidgets.push_back(dynamic_cast<Widget*>(southWestMotorSpeedLabel));
 
 		// Send command to start Drone object
 		StartDroneViewCommand* startDroneViewCommand =
 				new StartDroneViewCommand(VIEW_COMMAND_ID::COMMAND_START_DRONE);
 		mViewMediator->sendViewCommand(startDroneViewCommand);
+
+		// Send command to pair DroneViewModel to Drone instance
+		SetViewModelDroneViewCommand* setViewModelDroneViewCommand =
+				new SetViewModelDroneViewCommand(VIEW_COMMAND_ID::COMMAND_SET_VIEW_MODEL_DRONE);
+		setViewModelDroneViewCommand->mViewModel = &mDroneViewModel;
+		mViewMediator->sendViewCommand(setViewModelDroneViewCommand);
 
 		resetKeyPressedTime(KEY_ID::KEY_W);
 		resetKeyPressedTime(KEY_ID::KEY_A);
@@ -207,6 +223,17 @@ private:
 		resetKeyPressedTime(KEY_ID::KEY_ARROW_DOWN);
 		resetKeyPressedTime(KEY_ID::KEY_ARROW_LEFT);
 		resetKeyPressedTime(KEY_ID::KEY_ARROW_RIGHT);
+
+		Logging::log("DroneScreen", "Initialize done");
+	}
+
+	void updateWidgets()
+	{
+		mDroneViewModel.update();
+		dynamic_cast<TextLabel*>(mWidgets[0])->setText("NE: " + std::to_string(mDroneViewModel.mNorthEastMotorSpeed));
+		dynamic_cast<TextLabel*>(mWidgets[1])->setText("NW: " + std::to_string(mDroneViewModel.mNorthWestMotorSpeed));
+		dynamic_cast<TextLabel*>(mWidgets[2])->setText("SE: " + std::to_string(mDroneViewModel.mSouthEastMotorSpeed));
+		dynamic_cast<TextLabel*>(mWidgets[3])->setText("SW: " + std::to_string(mDroneViewModel.mSouthWestMotorSpeed));
 	}
 
 	void resetKeyPressedTime(KEY_ID keyId)
@@ -221,6 +248,7 @@ private:
 	}
 
 	std::map<KEY_ID, std::chrono::time_point<std::chrono::steady_clock>> mKeyPressedTime;
+	DroneViewModel mDroneViewModel;
 
 };
 
