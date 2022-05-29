@@ -15,6 +15,7 @@ public:
 
 	void run();
 	void addCommand(ViewCommand* viewCommand);
+	int getMotorSpeed(MOTOR_ID motorId);
 
 private:
 

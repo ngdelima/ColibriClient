@@ -1,4 +1,5 @@
 #include"Model/Model.h"
+#include"ViewModel/ViewModel.h"
 #include<thread>
 
 Model::Model(Communication* communication)
@@ -40,7 +41,13 @@ void Model::executeCommand(ViewCommand* viewCommand)
 		{
 			if(mDroneStarted)
 			{
-				mDrone->addCommand(viewCommand);
+				if(viewCommand->mId == VIEW_COMMAND_ID::COMMAND_SET_VIEW_MODEL_DRONE)
+				{
+					(dynamic_cast<SetViewModelDroneViewCommand*>(viewCommand)->mViewModel)->setDrone(mDrone);
+					(dynamic_cast<SetViewModelDroneViewCommand*>(viewCommand)->mViewModel)->setIsRunning(true);
+				}
+				else
+					mDrone->addCommand(viewCommand);
 			}
 			else
 			{

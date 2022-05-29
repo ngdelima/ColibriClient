@@ -4,11 +4,15 @@
 #include<queue>
 #include<mutex>
 
+//#include"ViewModel/ViewModel.h"
+
+// TODO: Drone commands should be in Model, View commands here
 enum class VIEW_COMMAND_ID
 {
 	COMMAND_FIRST = 0,
 	FIRST_DRONE_COMMAND = COMMAND_FIRST, 
 	COMMAND_START_DRONE = FIRST_DRONE_COMMAND,
+	COMMAND_SET_VIEW_MODEL_DRONE,
 	COMMAND_SET_MOTOR_SPEED,
 	COMMAND_SET_MOTOR_SPEED_DELTA,
 	COMMAND_STOP_DRONE,
@@ -82,6 +86,16 @@ public:
 	: ViewCommand(id)
 	{}
 	// TODO: No params at the moment, later add usb port and other stuff
+};
+class DroneViewModel;
+class SetViewModelDroneViewCommand : public ViewCommand
+{
+public:
+	SetViewModelDroneViewCommand(VIEW_COMMAND_ID id)
+	: ViewCommand(id)
+	{}
+	
+	DroneViewModel* mViewModel;
 };
 
 class ThreadSafeViewCommandQueue
